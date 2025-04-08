@@ -105,3 +105,16 @@ public class ThreadPoolConfig {
 }
 ```
 
+更方便的写法
+```
+ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+executor.setTaskDecorator(runnable -> {
+    Map<String, String> context = MDC.getCopyOfContextMap();
+    return () -> {
+        if (context != null) {
+            MDC.setContextMap(context);
+        }
+        runnable.run();
+    };
+});
+```
